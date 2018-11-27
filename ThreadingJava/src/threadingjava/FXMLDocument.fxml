@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="610" prefWidth="730" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60" fx:controller="threadingjava.FXMLDocumentController">
+    <children>
+        <BorderPane>
+            <left>
+                <VBox minWidth="100.0" style="-fx-padding: 10px;">
+                    <Button fx:id="buttonSync" minWidth="100.0" onAction="#handleButtonSync" text="Sync" />
+                    <Button fx:id="buttonSched" minWidth="100.0" onAction="#handleButtonCompletableFuture" text="Thread" />
+                    <Button fx:id="buttonSchedRows" minWidth="100.0" onAction="#handleButtonCompletableFutureRows" text="Thread rows" />
+        
+                    <Label fx:id="label" minWidth="100.0" />            
+                </VBox>
+            </left>
+            
+            <center>
+                <BorderPane style="-fx-border-width: 1px; -fx-border-color: black;">
+                    <center>
+                        <ImageView fx:id="image" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+                    </center>
+                </BorderPane>
+            </center>
+        </BorderPane>
+        
+    </children>
+</AnchorPane>
