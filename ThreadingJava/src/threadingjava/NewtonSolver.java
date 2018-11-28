@@ -6,6 +6,9 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 
@@ -59,7 +62,7 @@ public class NewtonSolver {
     public BufferedImage getImage() {
         return image;
     }
-    
+
     public WritableImage getImageFX() {
         return SwingFXUtils.toFXImage(getImage(), null);
     }
@@ -77,6 +80,18 @@ public class NewtonSolver {
         return Math.round(tmp * 1000) / 1000.0;
     }
 
+    public CompletableFuture<String> asyncSolve() throws InterruptedException {
+        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+
+        Executors.newCachedThreadPool().submit(() -> {
+            solve();
+            completableFuture.complete("Hello");
+            return null;
+        });
+
+        return completableFuture;
+    }
+
     public void solve() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
@@ -92,6 +107,14 @@ public class NewtonSolver {
         }
     }
 
+    public void solvePart(int part, int totalNomberOfParts) {
+        int partSize = getHeight() / totalNomberOfParts;
+        for (int i = 0; i < partSize; i++) {
+            int row = partSize * part + i;
+            solveRow(row);
+        }
+    }
+
     private void solvePoint(int j, int i) {
         // find "world" coordinates of pixel
         double x = xmin + j * xstep;
@@ -103,7 +126,7 @@ public class NewtonSolver {
         if (ox.getIm() == 0) {
             ox.setIm(0.0001);
         }
-        
+
         //Console.WriteLine(ox);
         // find solution of equation using newton's iteration
         float it = 0;
@@ -117,7 +140,7 @@ public class NewtonSolver {
             }
             it++;
         }
-        
+
         //Console.ReadKey();
         // find solution root number
         boolean known = false;
@@ -133,12 +156,12 @@ public class NewtonSolver {
             id = roots.size();
             //maxid = id + 1;
         }
-        
+
         Color vv = colours[id % colours.length];
         //vv = Color.FromArgb(vv.R, vv.G, vv.B);
         vv = new Color(Math.min(Math.max(0, vv.getRed() - (int) it * 4), 255), Math.min(Math.max(0, vv.getGreen() - (int) it * 4), 255), Math.min(Math.max(0, vv.getBlue() - (int) it * 4), 255));
         //vv = Math.Min(Math.Max(0, vv), 255);
-        
+
         // TODO: thread safe access??
         image.setRGB(j, i, vv.getRGB());
     }
